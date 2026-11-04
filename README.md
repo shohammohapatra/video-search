@@ -1,5 +1,11 @@
 # Natural Language-Based Search and Retrieval from Video
 
+![Backend](https://img.shields.io/badge/backend-FastAPI-009688)
+![Frontend](https://img.shields.io/badge/frontend-Next.js-111827)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+An end-to-end, grounded video intelligence workspace for searching and asking follow-up questions across local uploads and YouTube videos.
+
 Production-style MVP for asking grounded natural-language questions over uploaded videos and YouTube videos.
 
 ## Features
