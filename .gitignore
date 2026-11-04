@@ -17,3 +17,6 @@ backend/**/__pycache__/
 *.log
 coverage.xml
 .coverage
+
+*.tsbuildinfo
+backend/*.egg-info/
