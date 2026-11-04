@@ -1,0 +1,65 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: video
+      POSTGRES_PASSWORD: video
+      POSTGRES_DB: video_search
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: infra/docker/backend.Dockerfile
+    env_file: .env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://video:video@db:5432/video_search
+      SYNC_DATABASE_URL: postgresql+psycopg://video:video@db:5432/video_search
+      REDIS_URL: redis://redis:6379/0
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/backend.Dockerfile
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=info
+    env_file: .env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://video:video@db:5432/video_search
+      SYNC_DATABASE_URL: postgresql+psycopg://video:video@db:5432/video_search
+      REDIS_URL: redis://redis:6379/0
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - backend
+      - redis
+
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/frontend.Dockerfile
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:8000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

@@ -1,0 +1,13 @@
+[
+  {
+    "question": "What is the difference between clustered and non-clustered indexes?",
+    "expected_video": "DBMS Lecture 1",
+    "expected_timestamp_range": [480, 540],
+    "expected_answer": "Clustered indexes determine physical row ordering; non-clustered indexes use a separate structure pointing to rows."
+  },
+  {
+    "question": "What is the time complexity of Dijkstra's algorithm?",
+    "unsupported": true
+  }
+]
+
